@@ -1,0 +1,37 @@
+name: Auto-Release
+
+on: 
+  push:
+    branches: 
+    - 'main'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version Override
+        required: false
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 #v5.2.0
+      with:
+        dotnet-version: '10'
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+    - name: Build
+      id: build
+      run: |
+        ./build.sh || exit $?
+        dotnet tool install -g dotnet-script || exit $?
+        echo "resonite_version=$(dotnet script get-assembly-version.csx ResoniteAssemblies/FrooxEngine.dll)" >> "$GITHUB_OUTPUT" || exit $?
+        echo "mod_version=$(dotnet script get-assembly-version.csx ResoniteAssemblies/rml_mods/*.dll)" >> "$GITHUB_OUTPUT" || exit $?
+    - uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd #v1.12.0
+      with:
+        tag: "v${{ inputs.version || steps.build.outputs.mod_version }}-${{steps.build.outputs.resonite_version}}"
+        artifacts: "ResoniteAssemblies/rml_mods/*.zip"
+        makeLatest: true
+        body: |
+          TODO
