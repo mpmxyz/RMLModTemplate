@@ -37,7 +37,9 @@ jobs:
           echo "RESONITE_VERSION=$RESONITE_VERSION" >> "$GITHUB_OUTPUT"
         fi
   trigger-release:
-    if: jobs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
+    needs:
+      check-for-resonite-update
+    if: needs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
     uses: $/.github/workflows/build-release.yml
     with:
-      description: "Automatic rebuild with Resonite ${{jobs.check-for-resonite-update.outputs.RESONITE_VERSION}}"
+      description: "Automatic rebuild with Resonite ${{needs.check-for-resonite-update.outputs.RESONITE_VERSION}}"
