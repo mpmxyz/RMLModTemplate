@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       check-for-resonite-update
-    if: ${{ ! needs.check-for-resonite-update.UP_TO_DATE }}
+    if: needs.check-for-resonite-update.UP_TO_DATE != 'true'
     permissions:
       contents: write
     steps:
