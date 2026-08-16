@@ -40,6 +40,8 @@ jobs:
     needs:
       check-for-resonite-update
     if: needs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
+    permissions:
+      contents: write
     uses: $/.github/workflows/build-release.yml
     with:
       description: "Automatic rebuild with Resonite ${{needs.check-for-resonite-update.outputs.RESONITE_VERSION}}"
