@@ -5,7 +5,7 @@ BUILD_NAME="$(basename *.slnx .slnx)"
 export ResonitePath="$BUILD_PATH/ResoniteAssemblies/"
 
 #The default will make the build script testable outside of a GitHub workflow.
-REPOSITORY_OWNER=${$GITHUB_REPOSITORY_OWNER:-TODO_TemplateAuthor}
+REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER:-TODO_TemplateAuthor}
 
 # setup Resonite's reference assemblies
 mkdir -p "$ResonitePath" && cd "$ResonitePath" || exit 1
