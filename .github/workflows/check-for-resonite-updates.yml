@@ -16,7 +16,7 @@ jobs:
       id: check-version
       run: | #This is not put in an sh file because doing so would require downloading the repository.
         echo "Checking for current Resonite version..."
-        SAFE_VERSION_PATTERN='^[\w\.]+$' #SECURITY: prevents interpretation when written into $GITHUB_OUTPUT
+        SAFE_VERSION_PATTERN='^[a-zA-Z0-9_\.\-]+$' #SECURITY: prevents interpretation when written into $GITHUB_OUTPUT
         RESONITE_VERSION="$( curl -s https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/ResoniteAssemblies/refs/heads/main/Assemblies/RESONITE_VERSION | head -n 1 | tr -d '\r\n ' )" || exit 1
         if [[ ! "$RESONITE_VERSION" =~ $SAFE_VERSION_PATTERN ]]
         then
