@@ -4,48 +4,26 @@ on:
   push:
     branches: 
     - 'main'
+  workflow_call:
+    inputs:
+      description:
+        description: Release Description
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       version:
         description: Version Override
         required: false
         type: string
-  schedule:
-  - cron: 37 1/3 * * *
+      description:
+        description: Release Description
+        required: false
+        type: string
 
 jobs:
-  check-for-resonite-update:
-    runs-on: ubuntu-slim
-    outputs:
-      UP_TO_DATE: ${{ steps.check-version.outputs.UP_TO_DATE }}
-    steps:
-    - name: Query Resonite version and check if matching tag exists
-      id: check-version
-      if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-      run: |
-        echo "Checking for current Resonite version..."
-        RESONITE_VERSION=$( curl -s https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/ResoniteAssemblies/refs/heads/main/Assemblies/RESONITE_VERSION | tr -d '\r\n ' ) || exit 1
-        if [ -z "$RESONITE_VERSION" ]
-        then
-          echo "Invalid Resonite version '$RESONITE_VERSION'!" >&2
-          exit 2
-        fi
-        echo "Searching for release tags built with Resonite $RESONITE_VERSION..."
-        MATCHING_RELEASES=$( git ls-remote --tags 'https://github.com/${{github.repository}}' "*-$RESONITE_VERSION" ) || exit 3
-        if printf %s "$MATCHING_RELEASES" | grep -Fq -- "-$RESONITE_VERSION"
-        then
-          printf "Found:\n%s\n" "$MATCHING_RELEASES"
-          echo "Cancelling release workflow..."
-          echo "UP_TO_DATE=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "No matching releases found!"
-          echo "Continuing with release workflow..."
-        fi
   release:
     runs-on: ubuntu-latest
-    needs:
-    - check-for-resonite-update
-    if: needs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
     permissions:
       contents: write
     steps:
@@ -67,4 +45,4 @@ jobs:
 #       artifacts: "ResoniteAssemblies/*.zip" #Use this if you need to include libraries or other assets!
         makeLatest: true
         body: |
-          TODO
+          ${{ inputs.description || 'TODO' }}
