@@ -8,6 +8,9 @@ on:
 jobs:
   check-for-resonite-update:
     runs-on: ubuntu-slim
+    outputs:
+      UP_TO_DATE: ${{steps.check-version.outputs.UP_TO_DATE}}
+      RESONITE_VERSION: ${{steps.check-version.outputs.RESONITE_VERSION}}
     steps:
     - name: Query Resonite version and check if matching tag exists
       id: check-version
@@ -33,8 +36,8 @@ jobs:
           echo "Continuing with release workflow..."
           echo "RESONITE_VERSION=$RESONITE_VERSION" >> "$GITHUB_OUTPUT"
         fi
-    - name: Trigger Release
-      if: steps.check-version.outputs.UP_TO_DATE != 'true'
-      uses: $/.github/workflows/build-release.yml
-      with:
-        description: "Automatic rebuild with Resonite ${{steps.check-version.outputs.RESONITE_VERSION}}"
+  trigger-release:
+    if: jobs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
+    uses: $/.github/workflows/build-release.yml
+    with:
+      description: "Automatic rebuild with Resonite ${{jobs.check-for-resonite-update.outputs.RESONITE_VERSION}}"
