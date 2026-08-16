@@ -31,7 +31,7 @@ jobs:
           exit 2
         fi
         echo "Searching for release tags built with Resonite $RESONITE_VERSION..."
-        MATCHING_RELEASES=$( git ls-remote --tags ${{github.repositoryUrl}} "*-$RESONITE_VERSION" ) || exit 3
+        MATCHING_RELEASES=$( git ls-remote --tags 'https://github.com/${{github.repository}}' "*-$RESONITE_VERSION" ) || exit 3
         if printf %s "$MATCHING_RELEASES" | grep -Fq "-$RESONITE_VERSION"
         then
           printf "Found:\n%s\n" "$MATCHING_RELEASES"
