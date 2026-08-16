@@ -1,4 +1,5 @@
 # RMLModTemplate
+[![Auto-Release](https://github.com/mpmxyz/RMLModTemplate/actions/workflows/build-release.yml/badge.svg)](https://github.com/mpmxyz/RMLModTemplate/actions/workflows/build-release.yml) [![Check for Resonite Updates](https://github.com/mpmxyz/RMLModTemplate/actions/workflows/check-for-resonite-updates.yml/badge.svg)](https://github.com/mpmxyz/RMLModTemplate/actions/workflows/check-for-resonite-updates.yml)
 
 This is a simple template to develop mods for [Resonite](https://resonite.com/) using [Resonite Mod Loader](https://github.com/resonite-modding-group/ResoniteModLoader) (RML).
 
@@ -17,7 +18,7 @@ It incorporates learnings from [a previous template](https://github.com/mpmxyz/R
 - CI/CD is simplified so that a simple push to main will publish a new release.
 - The release version number is now dictated from the code.
   - You cannot mismatch or accidentally release a duplicate version number!
-- A build for a new Resonite version can be triggered 
+- A build for a new Resonite version is automatically triggered at most 3 hours after it has been pushed to the fork of [mpmxyz/ResoniteAssemblies](https://github.com/mpmxyz/ResoniteAssemblies).
 
 ## How to get started
 1. [Create a repository](https://github.com/new?template_name=RMLModTemplate&template_owner=mpmxyz) with this as a template!
@@ -25,6 +26,7 @@ It incorporates learnings from [a previous template](https://github.com/mpmxyz/R
 3. Ensure the enviroment variable `ResonitePath` points to the Resonite install directory!
 4. Run `setup-template-names.sh` to edit author and mod names!
 5. Start coding!
+6. A fork of [mpmxyz/ResoniteAssemblies](https://github.com/mpmxyz/ResoniteAssemblies) is required to publish releases.
 
 ## How to publish a release
 1. Ensure you have incremented the version number in `TODO_TemplateModName.VERSION_CONSTANT`!
@@ -33,13 +35,16 @@ It incorporates learnings from [a previous template](https://github.com/mpmxyz/R
 4. Your new version has been released. Edit the release notes to explain your changes!
 
 ## How to rebuild for a new Resonite version
-1. Run the action `build-release` manually from the `Action` tab on GitHub!
-2. Wait until the workflow `build-release` finished successfully!
-3. The new version - based on the current state of branch `main` - has been released. Edit the release notes to explain your (non-)changes!
+1. [Update the fork](https://github.com/mpmxyz/ResoniteAssemblies/blob/main/README.md#update-workflow) of `mpmxyz/ResoniteAssemblies`!
+2. Either
+   - Either wait until the workflow [`check-for-resonite-updates`](.github/workflows/check-for-resonite-updates.yml) runs automatically (max. 3 hours)
+   - or [trigger it manually](https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/actions/workflows/check-for-resonite-updates.yml).
 
 ## The following section can be used as a base for your own README.md:
 
 # TODO_TemplateModName
+
+[![Auto-Release](https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/actions/workflows/build-release.yml/badge.svg)](https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/actions/workflows/build-release.yml) [![Check for Resonite Updates](https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/actions/workflows/check-for-resonite-updates.yml/badge.svg)](https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/actions/workflows/check-for-resonite-updates.yml)
 
 TODO: The pitch - why should one need this mod?
 
