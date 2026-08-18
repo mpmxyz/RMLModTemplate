@@ -19,42 +19,14 @@ jobs:
       RESONITE_VERSION: ${{steps.check-version.outputs.RESONITE_VERSION}}
     env:
       FORCE_RELEASE: ${{ inputs.force-release }}
+      REPOSITORY_NAME: ${{github.repository}}
     steps:
     - name: Query Resonite version and check if matching tag exists
       id: check-version
-      run: | #This is not put in an sh file because doing so would require downloading the repository.
-        echo "Checking for current Resonite version..."
-        SAFE_VERSION_PATTERN='^[a-zA-Z0-9_\.\-]+$' #SECURITY: prevents interpretation when written into $GITHUB_OUTPUT
-        if ! RESONITE_VERSION="$( curl -s https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/ResoniteAssemblies/refs/heads/main/Assemblies/RESONITE_VERSION | head -n 1 | tr -d '\r\n ' )"
-        then
-          echo "Make sure you own a fork of https://github.com/mpmxyz/ResoniteAssemblies!" >&2
-          echo "While it would be possible to depend on someone else's fork it can be maintained easily without being dependent on other people's actions." >&2
-          exit 1
-        fi
-        if [[ ! "$RESONITE_VERSION" =~ $SAFE_VERSION_PATTERN ]]
-        then
-          echo "Invalid Resonite version '$RESONITE_VERSION'!" >&2
-          exit 2
-        fi
-
-        echo "Searching for release tags built with Resonite $RESONITE_VERSION..."
-        MATCHING_RELEASES="$( git ls-remote --tags 'https://github.com/${{github.repository}}' "*-$RESONITE_VERSION" )" || exit 3
-        if printf %s "$MATCHING_RELEASES" | grep -Fq -- "-$RESONITE_VERSION" && [ -z "$FORCE_RELEASE" ]
-        then
-          printf "Found:\n%s\n" "$MATCHING_RELEASES"
-          if printf %s "$MATCHING_RELEASES" | grep -Fqv -- "failed-$RESONITE_VERSION"
-          then
-            echo "Cancelling release workflow..."
-            echo "UP_TO_DATE=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No release found, only failures..."
-            exit 99 #fails the workflow so no build is attempted (new pushes with bug fixes trigger build-release directly)
-          fi
-        else
-          echo "No matching releases found!"
-          echo "Continuing with release workflow..."
-          echo "RESONITE_VERSION=$RESONITE_VERSION" >> "$GITHUB_OUTPUT"
-        fi
+      run: |
+        wget https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/$REPOSITORY_NAME/refs/heads/main/.github/workflows/check-for-resonite-updates.sh || exit 90
+        chmod +x check-for-resonite-updates.sh || exit 95
+        ./check-for-resonite-updates.sh #either writes UP_TO_DATE=true or RESONITE_VERSION=x.y.z.b
   trigger-release:
     needs: check-for-resonite-update
     if: needs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
