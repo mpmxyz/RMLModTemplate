@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-BUILD_PATH="$(realpath $( dirname "$0" ))"
-BUILD_NAME="$(basename *.slnx .slnx)"
+BUILD_PATH="$(realpath "$( dirname "$0" )")"
+BUILD_NAME="$(basename -- *.slnx .slnx)"
 export ResonitePath="$BUILD_PATH/ResoniteAssemblies/"
 
 #The default will make the build script testable outside of a GitHub workflow.

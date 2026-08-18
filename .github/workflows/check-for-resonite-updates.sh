@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-: ${GITHUB_OUTPUT:?}
-: ${REPOSITORY_NAME:?}
-: ${GITHUB_REPOSITORY_OWNER:?}
+#The defaults will make the build script testable outside of a GitHub workflow.
+GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/stdout}"
+GITHUB_REPOSITORY_OWNER="${GITHUB_REPOSITORY_OWNER:-TODO_TemplateAuthor}"
+REPOSITORY_NAME="${REPOSITORY_NAME:-$GITHUB_REPOSITORY_OWNER/TODO_TemplateModName}"
 
 echo "Checking for current Resonite version..."
 SAFE_VERSION_PATTERN='^[a-zA-Z0-9_\.\-]+$' #SECURITY: prevents interpretation when written into $GITHUB_OUTPUT
-if ! RESONITE_VERSION="$( curl -s https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/ResoniteAssemblies/refs/heads/main/Assemblies/RESONITE_VERSION | head -n 1 | tr -d '\r\n ' )"
+if ! RESONITE_VERSION="$( curl -s "https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/ResoniteAssemblies/refs/heads/main/Assemblies/RESONITE_VERSION" | head -n 1 | tr -d '\r\n ' )"
 then
 	echo "Make sure you own a fork of https://github.com/mpmxyz/ResoniteAssemblies!" >&2
 	echo "While it would be possible to depend on someone else's fork it can be maintained easily without being dependent on other people's actions." >&2
