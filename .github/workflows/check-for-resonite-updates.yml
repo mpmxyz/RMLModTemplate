@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       force-release:
-        description: Allows testing the workflow when a tag already exists (resulting in failure)
+        description: Force build-release to test build failure when tag already exists
         type: boolean
         required: false
         default: false
@@ -40,7 +40,7 @@ jobs:
     needs:
     - check-for-resonite-update
     - trigger-release
-    if: needs.trigger-release.result == 'failure' #implies not skipped/not up to date
+    if: always() && needs.trigger-release.result == 'failure' #implies not skipped/not up to date
     permissions:
       contents: write
     steps:
