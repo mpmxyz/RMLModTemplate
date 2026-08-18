@@ -20,7 +20,7 @@ public class TODO_TemplateModName : ResoniteMod {
 	private static readonly ModConfigurationKey<bool> enabled = new("enabled", "Does the mod do anything?", () => true);
 
 	public override void OnEngineInit() {
-		Harmony harmony = new("TODO_TemplateAuthor.TODO_TemplateModName");
+		Harmony harmony = new("TODO_TemplateRMLAuthorID.TODO_TemplateModName");
 		harmony.PatchAll();
 	}
 
