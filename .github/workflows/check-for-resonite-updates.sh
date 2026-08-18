@@ -20,19 +20,26 @@ fi
 
 echo "Searching for release tags built with Resonite $RESONITE_VERSION..."
 MATCHING_RELEASES="$( git ls-remote --tags "https://github.com/$REPOSITORY_NAME" "*-$RESONITE_VERSION" )" || exit 3
-if printf %s "$MATCHING_RELEASES" | grep -Fq -- "-$RESONITE_VERSION" && [ -z "$FORCE_RELEASE" ]
+if printf %s "$MATCHING_RELEASES" | grep -Fq -- "-$RESONITE_VERSION"
 then
 	printf "Found:\n%s\n" "$MATCHING_RELEASES"
-	if printf %s "$MATCHING_RELEASES" | grep -Fqv -- "failed-$RESONITE_VERSION"
+	if [ "$FORCE_RELEASE" != 'true' ]
 	then
-	echo "Cancelling release workflow..."
-	echo "UP_TO_DATE=true" >> "$GITHUB_OUTPUT"
+		if printf %s "$MATCHING_RELEASES" | grep -Fqv -- "failed-$RESONITE_VERSION"
+		then
+			echo "Cancelling release workflow..."
+			echo "UP_TO_DATE=true" >> "$GITHUB_OUTPUT"
+			exit 0 #skip build-release but don't fail
+		else
+			echo "No release found, only failures..."
+			exit 99 #fails the workflow so no build is attempted (new pushes with bug fixes trigger build-release directly)
+		fi
 	else
-	echo "No release found, only failures..."
-	exit 99 #fails the workflow so no build is attempted (new pushes with bug fixes trigger build-release directly)
+		echo "Continuing anyway... (FORCE_RELEASE=true)"
 	fi
 else
 	echo "No matching releases found!"
-	echo "Continuing with release workflow..."
-	echo "RESONITE_VERSION=$RESONITE_VERSION" >> "$GITHUB_OUTPUT"
 fi
+
+echo "Continuing with release workflow..."
+echo "RESONITE_VERSION=$RESONITE_VERSION" >> "$GITHUB_OUTPUT"
