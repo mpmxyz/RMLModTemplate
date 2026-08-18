@@ -37,7 +37,9 @@ jobs:
       description: "Automatic rebuild with Resonite ${{needs.check-for-resonite-update.outputs.RESONITE_VERSION}}"
   mark-failed-release:
     runs-on: ubuntu-slim  
-    needs: trigger-release
+    needs:
+    - check-for-resonite-update
+    - trigger-release
     if: needs.trigger-release.result == 'failure' #implies not skipped/not up to date
     permissions:
       contents: write
