@@ -1,0 +1,20 @@
+{
+	"name": "TODO_TemplateModName",
+	"id": "TODO_TemplateRMLAuthorID.TODO_TemplateModName",
+	"description": "TODO_Description",
+	"category": "TODO_Category",
+	"sourceLocation": "https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/",
+	"versionTemplate": {
+		"releaseUrl": "https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/releases/tag/%TAG%",
+		"artifacts": [
+			{
+				"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/TODO_TemplateModName.dll",
+				"sha256": "computed automatically"
+			},
+			{
+				"url": "https://github.com/mpmxyz/RMLModTemplate/archive/refs/tags/%TAG%.zip",
+				"sha256": "computed automatically"
+			}
+		]
+	}
+}
