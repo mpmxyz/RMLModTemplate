@@ -4,6 +4,7 @@ on:
   push:
     branches: 
     - 'main'
+    - 'dev'
   workflow_call:
     inputs:
       description:
@@ -20,6 +21,11 @@ on:
         description: Release Description
         required: false
         type: string
+      fail_on_duplicate_version:
+        description: Require unpublished version number
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   release:
@@ -36,9 +42,29 @@ jobs:
       run: |
         ./build.sh || exit $?
         dotnet tool restore || exit $?
-        echo "resonite_version=$(dotnet script get-assembly-version.csx ResoniteAssemblies/FrooxEngine.dll)" >> "$GITHUB_OUTPUT" || exit $?
-        echo "mod_version=$(dotnet script get-assembly-version.csx ResoniteAssemblies/rml_mods/*.dll | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' )" >> "$GITHUB_OUTPUT" || exit $?
+        echo "resonite_version=$(dotnet script ./github/workflows/get-assembly-version.csx ResoniteAssemblies/FrooxEngine.dll)" >> "$GITHUB_OUTPUT" || exit $?
+        echo "mod_version=$(dotnet script ./github/workflows/get-assembly-version.csx ResoniteAssemblies/rml_mods/*.dll | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' )" >> "$GITHUB_OUTPUT" || exit $?
+    - name: "Optional: fail if release with version number exists already"
+      env:
+        RELEASE_TAG_PATTERN: "v${{ inputs.version || steps.build.outputs.mod_version }}-*"
+        FAIL_ON_MATCH: ${{ inputs.fail_on_duplicate_version || false }} #Change the default to false to warn or true to fail
+      run: |
+        echo "Checking if tag matching $RELEASE_TAG_PATTERN exists..."
+        MATCHES="$(git ls-remote --tags "https://github.com/$REPOSITORY_NAME" "$RELEASE_TAG_PATTERN")"
+        if printf %s "$MATCHES" | grep -Eq -- '.'
+        then
+          if [ "$FAIL_ON_MATCH" = 'true' ]
+          then
+            echo "::error::Release using the same binary version exists already!" >&2
+            exit 1
+          else
+            echo "::warning::Release using the same binary version exists already!" >&2
+            exit 0
+          fi
+        fi
+        echo "No match!"
     - uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd #v1.12.0
+      if: github.ref_name == 'main' && github.ref_type == 'branch'
       with:
         tag: "v${{ inputs.version || steps.build.outputs.mod_version }}-${{steps.build.outputs.resonite_version}}"
         artifacts: "ResoniteAssemblies/rml_mods/*.dll" #Use this if your mod runs with a single dll file!
