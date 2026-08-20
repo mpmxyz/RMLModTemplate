@@ -15,8 +15,8 @@ string path = args[2];
 
 try
 {
-    AssemblyName frooxEngineAssembly = AssemblyName.GetAssemblyName(path);
-    Console.WriteLine(frooxEngineAssembly.Version);
+    AssemblyName assembly = AssemblyName.GetAssemblyName(path);
+    Console.WriteLine(assembly.Version);
 }
 catch(Exception e)
 {

@@ -1,0 +1,58 @@
+name: Push RML Manifest
+
+on:
+  workflow_dispatch:
+    inputs:
+      override:
+        description: Override existing version
+        required: false
+        default: false
+        type: boolean
+      dry-run: #for testing purposes only
+        description: Dry run
+        required: false
+        default: false
+        type: boolean
+      
+jobs:
+  release:
+    runs-on: ubuntu-slim
+    permissions:
+      contents: write
+    steps:
+    - name: Report missing token
+      if: secrets.RML_MANIFEST_TOKEN == ''
+      run: |
+        echo "::error::Expected secret RML_MANIFEST_TOKEN to push to repository $GITHUB_REPOSITORY_OWNER}}/resonite-mod-manifest" >&2
+        exit 1
+    - name: Report if not pushing a tag
+      if: github.ref_type != 'tag'
+      run: |
+        echo "::error::Expected to push a release tag!" >&2
+        exit 1
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+      with:
+        repository: ${{github.repository_owner}}/resonite-mod-manifest
+        token: ${{secrets.RML_MANIFEST_TOKEN}}
+    - name: Update and push manifest
+      env:
+        RELEASE_TAG: ${{github.ref_name}}
+        TEMPLATE_FILE: rml-mod.json
+        TARGET_FILE: TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json
+        OVERRIDE_SAME_VERSION: ${{inputs.override}}
+        DRY_RUN: ${{inputs.dry-run}}
+      run: |
+        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/.github/workflows/compose-mod-manifest-for-tag.sh" || exit 90
+        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/$TEMPLATE_FILE" || exit 91
+        chmod +x compose-mod-manifest-for-tag.sh || exit 95
+        ./compose-mod-manifest-for-tag.sh
+        git diff
+        git add "$TARGET_FILE"
+        git commit -m "Added entry for version $RELEASE_TAG"
+        if [ "$DRY_RUN" == 'true' ]
+        then
+          echo "Dry run: skipping push..."
+        else
+          git push
+        fi
+      
