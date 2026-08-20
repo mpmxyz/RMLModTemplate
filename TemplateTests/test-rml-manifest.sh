@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-cd "$(basename "$0")" || exit 1
+cd "$(dirname "$0")" || exit 1
 
-RELEASE_TAG=v0.0.0-ManifestTest
-TEMPLATE_FILE=rml-mod.json
-TARGET_FILE=manifest-tested.json
-OVERRIDE_SAME_VERSION=false
+TESTED_SCRIPT="$( realpath ../.github/workflows/compose-mod-manifest-for-tag.sh )"
+
+export RELEASE_TAG=v0.0.0-ManifestTest
+export TEMPLATE_FILE=rml-mod.json
+export TARGET_FILE=manifest-tested.json
+export OVERRIDE_SAME_VERSION=false
 
 FAILED=0
 
@@ -14,29 +16,36 @@ fail() {
 	(( FAILED++ ))
 }
 
+test_stdout=/dev/null
+
 pushd "manifest-no-conflict" &&
 cp manifest-before.json manifest-tested.json &&
-../.github/workflows/compose-mod-manifest-for-tag.sh && 
-diff -u manifest-tested.json manifest-after.json || fail "Normal merge"
+"$TESTED_SCRIPT" >"$test_stdout" && 
+diff -bu manifest-tested.json manifest-after.json || fail "Normal merge"
 popd
 
 pushd "manifest-no-previous" &&
-cp manifest-before.json manifest-tested.json &&
-../.github/workflows/compose-mod-manifest-for-tag.sh && 
-diff -u manifest-tested.json manifest-after.json || fail "No previous manifest"
+rm -f manifest-tested.json &&
+"$TESTED_SCRIPT" >"$test_stdout" && 
+diff -bu manifest-tested.json manifest-after.json || fail "No previous manifest"
 popd
 
 pushd "manifest-with-conflict" &&
 cp manifest-before.json manifest-tested.json || fail "Setup of 'Failure due to conflict'"
-../.github/workflows/compose-mod-manifest-for-tag.sh && fail "Failure due to conflict"
+"$TESTED_SCRIPT" >"$test_stdout" && fail "Failure due to conflict"
 popd
 
-OVERRIDE_SAME_VERSION=true
+export OVERRIDE_SAME_VERSION=true
 pushd "manifest-with-conflict" &&
 cp manifest-before.json manifest-tested.json &&
-../.github/workflows/compose-mod-manifest-for-tag.sh && 
-diff -u manifest-tested.json manifest-after.json || fail "Overriding conflict"
+"$TESTED_SCRIPT" >"$test_stdout" && 
+diff -bu manifest-tested.json manifest-after.json || fail "Overriding conflict"
 popd
 
 echo "Failed tests: $FAILED"
+
+if [ "$FAILED" -eq 0 ]
+then
+	rm */manifest-tested.json
+fi
 exit $FAILED

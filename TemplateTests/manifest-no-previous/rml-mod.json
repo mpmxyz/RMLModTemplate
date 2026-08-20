@@ -5,10 +5,10 @@
 	"ExistsAfter": "ABC",
 	"sourceLocation": "https://github.com/mpmxyz/RMLModTemplate/",
 	"versionTemplate": {
-		"releaseUrl": "https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/releases/tag/%TAG%",
+		"releaseUrl": "https://github.com/mpmxyz/RMLModTemplate/releases/tag/%TAG%",
 		"artifacts": [
 			{
-				"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/TODO_TemplateModName.dll",
+				"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/RMLModTemplate.dll",
 				"sha256": "computed automatically"
 			},
 			{
