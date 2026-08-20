@@ -88,7 +88,7 @@ do
 				NEW_NAME="${NEW_NAME%x}"
 				if [ "$OLD_NAME" != "$NEW_NAME" ]
 				then
-					mv "$OLD_NAME" "$NEW_NAME"
+					git mv "$OLD_NAME" "$NEW_NAME"
 				fi
 			done
 		fi
