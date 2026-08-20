@@ -3,7 +3,7 @@
 cd "$( dirname "$0" )" || exit 1
 
 VALID_GITHUB_NAME_PATTERN='^[a-zA-Z0-9_\.\-]+$'
-VALID_RML_ID_PATTERN='^[^a-zA-Z0-9_\.\-]+$'
+VALID_RML_ID_PATTERN='^[a-zA-Z0-9_\.\-]+$'
 
 ##user input
 OLD_AUTHOR_NAME='TODO_TemplateAuthor'
@@ -17,7 +17,7 @@ fi
 
 OLD_RML_AUTHOR_ID='TODO_TemplateRMLAuthorID'
 OLD_RML_AUTHOR_PATTERN="$( printf %s "$OLD_RML_AUTHOR_ID" | sed -E 's/\W/\\\0/g' )"
-read -p "Author name (previous: $OLD_RML_AUTHOR_ID):" -r NEW_RML_AUTHOR_ID || exit 2
+read -p "Author manifest ID (previous: $OLD_RML_AUTHOR_ID):" -r NEW_RML_AUTHOR_ID || exit 2
 if [[ ! "$NEW_RML_AUTHOR_ID" =~ $VALID_RML_ID_PATTERN ]]
 then
   echo "Invalid RML author ID: '$NEW_RML_AUTHOR_ID'" >&2
