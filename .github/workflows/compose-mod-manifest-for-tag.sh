@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-RELEASE_TAG=v0.0.0-2026.8.12.1196
-TEMPLATE_FILE=rml-mod-test.json
-TARGET_FILE=rml-mod-remote.json
+RELEASE_TAG=${RELEASE_TAG:-${1:?Expected: \$RELEASE_TAG or \$1}}
+TEMPLATE_FILE=${TEMPLATE_FILE:-rml-mod.json}
+TARGET_FILE=${TARGET_FILE:-TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json}
+OVERRIDE_SAME_VERSION=${OVERRIDE_SAME_VERSION:-false}
 
 #hardcoded pattern as it is not customizable but a fixed part of the release logic anyway
 PATTERN="v([0-9]\\.[0-9]\\.[0-9])-.*"
@@ -14,14 +15,14 @@ then
 
 	if [ -r "$TARGET_FILE" ]
 	then
-		PREVIOUS_MANIFEST="$(jq . "$TARGET_FILE")"
+		PREVIOUS_MANIFEST="$(jq . "$TARGET_FILE")" || exit 1
 	else
-		PREVIOUS_MANIFEST='{"versions":{}}'
+		PREVIOUS_MANIFEST='{}'
 	fi
 
 	if jq -n --exit-status '$manifest.versions | has($version)' --argjson manifest "$PREVIOUS_MANIFEST" --arg version "$VERSION" >/dev/null
 	then
-		if [ 1=1 ]
+		if [ "$OVERRIDE_SAME_VERSION" = 'true' ]
 		then
 			echo "WARNING: Version already exists!"
 			echo "Overriding..."
@@ -59,8 +60,11 @@ then
 	echo "Merging into existing..."
 	MERGED_MANIFEST="$( jq -n '$template | del(.versionTemplate) | .versions=$manifest.versions | .versions[$version] = $versionDescription' --argjson template "$TEMPLATE" --argjson manifest "$PREVIOUS_MANIFEST" --arg version "$VERSION" --argjson versionDescription "$VERSION_DESCRIPTION" )" || exit 7
 
+	diff -bu <( printf %s "$PREVIOUS_MANIFEST" ) <( printf %s "$MERGED_MANIFEST")
+
+	mkdir -p "$(dirname "$TARGET_FILE")"
 	echo "$MERGED_MANIFEST" > "$TARGET_FILE"
 else
 	echo "Tag $RELEASE_TAG does not match expected pattern $PATTERN!"
-	exit 1
+	exit 8
 fi
