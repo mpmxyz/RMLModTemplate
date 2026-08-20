@@ -1,0 +1,20 @@
+{
+	"name": "NameAfter",
+	"id": "IDAfter",
+	"category": "CategoryAfter",
+	"ExistsAfter": "ABC",
+	"sourceLocation": "https://github.com/mpmxyz/RMLModTemplate/",
+	"versionTemplate": {
+		"releaseUrl": "https://github.com/TODO_TemplateAuthor/TODO_TemplateModName/releases/tag/%TAG%",
+		"artifacts": [
+			{
+				"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/TODO_TemplateModName.dll",
+				"sha256": "computed automatically"
+			},
+			{
+				"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/Hello.txt",
+				"sha256": "computed automatically"
+			}
+		]
+	}
+}

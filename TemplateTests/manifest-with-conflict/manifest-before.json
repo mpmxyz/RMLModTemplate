@@ -1,0 +1,27 @@
+{
+	"name": "NameBefore",
+	"id": "IDBefore",
+	"category": "CategoryBefore",
+	"ExistsBefore": "Test",
+	"sourceLocation": "https://github.com/mpmxyz/RMLModTemplate/",
+	"versions": {
+		"1.2.3": {
+			"releaseUrl": "https://github.com/mpmxyz/RMLModTemplate/releases/tag/%TAG%",
+			"artifacts": [
+				{
+					"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/RMLModTemplate.dll",
+					"sha256": "blah"
+				}
+			]
+		},
+		"0.0.0": {
+			"releaseUrl": "https://github.com/mpmxyz/RMLModTemplate/releases/tag/%TAG%",
+			"artifacts": [
+				{
+					"url": "https://github.com/mpmxyz/RMLModTemplate/releases/download/%TAG%/RMLModTemplate.dll",
+					"sha256": "blah"
+				}
+			]
+		}
+	}
+}
