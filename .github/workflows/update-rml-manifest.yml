@@ -40,14 +40,15 @@ jobs:
         token: ${{secrets.RML_MANIFEST_TOKEN}}
     - name: Update and push manifest
       env:
+        REPOSITORY_NAME: ${{github.repository}}
         RELEASE_TAG: ${{github.ref_name}}
         TEMPLATE_FILE: rml-mod.json
         TARGET_FILE: TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json
         OVERRIDE_SAME_VERSION: ${{inputs.override}}
         DRY_RUN: ${{inputs.dry-run}}
       run: |
-        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/.github/workflows/compose-mod-manifest-for-tag.sh" || exit 90
-        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/$TEMPLATE_FILE" || exit 91
+        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/tags/$RELEASE_TAG/.github/workflows/compose-mod-manifest-for-tag.sh" || exit 90
+        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/tags/$RELEASE_TAG/$TEMPLATE_FILE" || exit 91
         chmod +x compose-mod-manifest-for-tag.sh || exit 95
         ./compose-mod-manifest-for-tag.sh
         git diff
