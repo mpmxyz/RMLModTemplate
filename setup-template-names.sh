@@ -95,7 +95,7 @@ do
 	)
 done
 
-#replace file contents (nit in .git)
-find . -not -path '.git/*' -type f -exec sed -i "${SED_ARGS[@]}" {} +
+#replace file contents (not in .git)
+find . -not -path './.git/*' -type f -exec sed -i "${SED_ARGS[@]}" {} +
 
 echo "Setup complete! You can remove this file when you don't want to change names anymore."
