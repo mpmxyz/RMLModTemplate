@@ -42,8 +42,8 @@ jobs:
       run: |
         ./build.sh || exit $?
         dotnet tool restore || exit $?
-        echo "resonite_version=$(dotnet script ./github/workflows/get-assembly-version.csx ResoniteAssemblies/FrooxEngine.dll)" >> "$GITHUB_OUTPUT" || exit $?
-        echo "mod_version=$(dotnet script ./github/workflows/get-assembly-version.csx ResoniteAssemblies/rml_mods/*.dll | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' )" >> "$GITHUB_OUTPUT" || exit $?
+        echo "resonite_version=$(cat ResoniteAssemblies/RESONITE_VERSION)" >> "$GITHUB_OUTPUT" || exit $?
+        echo "mod_version=$(dotnet script ./get-assembly-version.csx ResoniteAssemblies/rml_mods/*.dll | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' )" >> "$GITHUB_OUTPUT" || exit $?
     - name: "Optional: fail if release with version number exists already"
       env:
         REPOSITORY_NAME: ${{github.repository}}
