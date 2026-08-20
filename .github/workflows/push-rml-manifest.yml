@@ -20,11 +20,15 @@ jobs:
     permissions:
       contents: write
     steps:
-    - name: Report missing token
-      if: secrets.RML_MANIFEST_TOKEN == ''
+    - name: Check token exists
+      env: 
+        RML_MANIFEST_TOKEN: ${{secrets.RML_MANIFEST_TOKEN}}
       run: |
-        echo "::error::Expected secret RML_MANIFEST_TOKEN to push to repository $GITHUB_REPOSITORY_OWNER}}/resonite-mod-manifest" >&2
-        exit 1
+        if [ -z "$RML_MANIFEST_TOKEN" ]
+        then
+          echo "::error::Expected secret RML_MANIFEST_TOKEN to push to repository $GITHUB_REPOSITORY_OWNER}}/resonite-mod-manifest" >&2
+          exit 1
+        fi
     - name: Report if not pushing a tag
       if: github.ref_type != 'tag'
       run: |
