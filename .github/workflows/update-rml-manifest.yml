@@ -1,4 +1,4 @@
-name: Push RML Manifest
+name: Update RML Manifest
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ on:
         type: boolean
       
 jobs:
-  release:
+  update-rml-manifest:
     runs-on: ubuntu-slim
     permissions:
       contents: write
@@ -26,7 +26,7 @@ jobs:
       run: |
         if [ -z "$RML_MANIFEST_TOKEN" ]
         then
-          echo "::error::Expected secret RML_MANIFEST_TOKEN to push to repository $GITHUB_REPOSITORY_OWNER}}/resonite-mod-manifest" >&2
+          echo "::error::Expected secret RML_MANIFEST_TOKEN to push to repository $GITHUB_REPOSITORY_OWNER/resonite-mod-manifest" >&2
           exit 1
         fi
     - name: Report if not pushing a tag
