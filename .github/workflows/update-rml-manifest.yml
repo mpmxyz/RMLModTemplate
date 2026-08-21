@@ -35,11 +35,11 @@ jobs:
         echo "::error::Expected to push a release tag!" >&2
         exit 1
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
       with:
         repository: ${{github.repository_owner}}/resonite-mod-manifest
         token: ${{secrets.RML_MANIFEST_TOKEN}}
         path: resonite-mod-manifest
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
     - name: Update and push manifest
       env:
         REPOSITORY_NAME: ${{github.repository}}
