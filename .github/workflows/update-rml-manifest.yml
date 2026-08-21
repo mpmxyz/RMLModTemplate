@@ -38,26 +38,17 @@ jobs:
       with:
         repository: ${{github.repository_owner}}/resonite-mod-manifest
         token: ${{secrets.RML_MANIFEST_TOKEN}}
+        path: resonite-mod-manifest
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
     - name: Update and push manifest
       env:
         REPOSITORY_NAME: ${{github.repository}}
         RELEASE_TAG: ${{github.ref_name}}
-        TEMPLATE_FILE: rml-mod.json
-        TARGET_FILE: TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json
         OVERRIDE_SAME_VERSION: ${{inputs.override}}
+        BRANCH_NAME: "${{github.repository}}" #branch in manifest repository is named after this repository's name
         DRY_RUN: ${{inputs.dry-run}}
+        AUTHOR: ${{github.actor}}
       run: |
-        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/tags/$RELEASE_TAG/.github/workflows/compose-mod-manifest-for-tag.sh" || exit 90
-        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/tags/$RELEASE_TAG/$TEMPLATE_FILE" || exit 91
-        chmod +x compose-mod-manifest-for-tag.sh || exit 95
-        ./compose-mod-manifest-for-tag.sh
-        git diff
-        git add "$TARGET_FILE"
-        git commit -m "Added entry for version $RELEASE_TAG"
-        if [ "$DRY_RUN" == 'true' ]
-        then
-          echo "Dry run: skipping push..."
-        else
-          git push
-        fi
+        scripts/compose-and-push-manifest.sh
+        
       

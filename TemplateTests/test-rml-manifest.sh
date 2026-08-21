@@ -2,7 +2,7 @@
 
 cd "$(dirname "$0")" || exit 1
 
-TESTED_SCRIPT="$( realpath ../.github/workflows/compose-mod-manifest-for-tag.sh )"
+TESTED_SCRIPT="$( realpath ../scripts/compose-mod-manifest-for-tag.sh )"
 
 export RELEASE_TAG=v0.0.0-ManifestTest
 export TEMPLATE_FILE=rml-mod.json

@@ -437,4 +437,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+#Downloaded by build.sh
 /ResoniteAssemblies
+#Used by push-manifest.sh and its components
+/resonite-mod-manifest

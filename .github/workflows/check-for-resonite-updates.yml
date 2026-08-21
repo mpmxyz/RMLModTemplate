@@ -24,7 +24,7 @@ jobs:
     - name: Query Resonite version and check if matching tag exists
       id: check-version
       run: |
-        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/.github/workflows/check-for-resonite-updates.sh" || exit 90
+        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/scripts/check-for-resonite-updates.sh" || exit 90
         chmod +x check-for-resonite-updates.sh || exit 95
         ./check-for-resonite-updates.sh #either writes UP_TO_DATE=true or RESONITE_VERSION=x.y.z.b
   trigger-release:
