@@ -8,9 +8,11 @@ RELEASE_TAG="${RELEASE_TAG:-${1:?Expected: \$RELEASE_TAG or \$1}}"
 #current mod description with version template
 TEMPLATE_FILE="${TEMPLATE_FILE:-../rml-mod.json}"
 #mod manifest file
-TARGET_FILE="${TARGET_FILE:-TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json}"
+TARGET_FILE="${TARGET_FILE:-manifest/TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json}"
 #set to "true" to allow replacing an existing version with updated data ("false" would fail in such situations.)
 OVERRIDE_SAME_VERSION="${OVERRIDE_SAME_VERSION:-false}"
+#avoids downloading and hashing of files for testing purposes
+INJECT_DUMMY_HASHSUMS="${INJECT_DUMMY_HASHSUMS:-false}"
 
 #hardcoded pattern as it is not customizable but a fixed part of the release logic anyway
 PATTERN="v([0-9]\\.[0-9]\\.[0-9])-.*"
@@ -55,7 +57,13 @@ then
 	for URL in "${URLS[@]}"
 	do
 		echo "Hashing $URL..."
-		HASHSUM="$( set -o pipefail ; curl --location --fail "$URL" | sha256sum | grep -m 1 -Eo '^\S+' )" || exit 6
+		if [ "$INJECT_DUMMY_HASHSUMS" != 'true' ]
+		then
+			HASHSUM="$( set -o pipefail ; curl --location --fail "$URL" | sha256sum | grep -m 1 -Eo '^\S+' )" || exit 6
+		else
+			HASHSUM="dummy"
+			echo "Injected dummy hashsums for testing purposes"
+		fi
 		echo "->$HASHSUM"
 		HASHSUMS+=( "$HASHSUM" )
 	done

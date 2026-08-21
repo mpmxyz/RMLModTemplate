@@ -5,7 +5,7 @@
 #tag of the release to be added to the manifest
 RELEASE_TAG="${RELEASE_TAG:-${1:?Expected: \$RELEASE_TAG or \$1}}"
 #mod manifest file
-TARGET_FILE="${TARGET_FILE:-TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json}"
+TARGET_FILE="${TARGET_FILE:-manifest/TODO_TemplateRMLAuthorID/TODO_TemplateModName/info.json}"
 #optional author to override user.name/user.email config for the manifest repository (needed for CI/CD)
 AUTHOR="${AUTHOR:-}"
 #option to disable the push operation (for CI tests)
