@@ -35,9 +35,10 @@ dotnet test --no-restore --no-build || exit 7
 cd "$ResonitePath" || exit 8
 zip "$BUILD_NAME.zip" rml_mods/*.dll
 
-SAFE_VERSION_PATTERN='[0-9\.]+'
+RESONITE_VERSION_PATTERN='^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+MOD_VERSION_PATTERN='^[0-9]+\.[0-9]+\.[0-9]+'
 
-RESONITE_VERSION="$(cat RESONITE_VERSION | grep -m 1 -Eo "$SAFE_VERSION_PATTERN" )" || exit $?
-MOD_VERSION="$(dotnet script $SCRIPTS_PATH/get-assembly-version.csx rml_mods/*.dll | grep -Eo "$SAFE_VERSION_PATTERN" )" || exit $?
+RESONITE_VERSION="$(cat RESONITE_VERSION | grep -m 1 -Eo "$RESONITE_VERSION_PATTERN" )" || exit $?
+MOD_VERSION="$(dotnet script $SCRIPTS_PATH/get-assembly-version.csx rml_mods/*.dll | grep -Eo "$MOD_VERSION_PATTERN" )" || exit $?
 echo "resonite_version=$RESONITE_VERSION" >> "$GITHUB_OUTPUT" || exit $?
 echo "mod_version=$MOD_VERSION" >> "$GITHUB_OUTPUT" || exit $?
