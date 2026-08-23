@@ -98,4 +98,4 @@ done
 #replace file contents (not in .git)
 find . -not -path './.git/*' -type f -exec sed -i "${SED_ARGS[@]}" {} +
 
-echo "Setup complete! You can remove this file when you don't want to change names anymore."
+echo "Setup complete! You can remove this file if you don't want to change names anymore."
