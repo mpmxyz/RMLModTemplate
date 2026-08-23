@@ -12,7 +12,8 @@ then
 	exit 100
 fi
 
-git pull
+git pull #for non-CI usage
+
 if [ -n "$BRANCH_NAME" ]
 then
 	git switch "origin/$BRANCH_NAME" >/dev/null || git switch "$BRANCH_NAME" >/dev/null || git switch -c "$BRANCH_NAME" || exit 101

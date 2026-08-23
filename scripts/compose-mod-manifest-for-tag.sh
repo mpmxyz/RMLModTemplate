@@ -77,9 +77,9 @@ then
 
 	diff -bu <( printf %s "$PREVIOUS_MANIFEST" ) <( printf %s "$MERGED_MANIFEST")
 
-	mkdir -p "$(dirname "$TARGET_FILE")"
-	echo "$MERGED_MANIFEST" > "$TARGET_FILE"
+	mkdir -p "$(dirname "$TARGET_FILE")" || exit 9
+	echo "$MERGED_MANIFEST" > "$TARGET_FILE" || exit 10
 else
 	echo "Tag $RELEASE_TAG does not match expected pattern $PATTERN!"
-	exit 9
+	exit 11
 fi

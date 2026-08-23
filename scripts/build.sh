@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-#The default will make the build script testable outside of a GitHub workflow.
+#The defaults will make the build script testable outside of a GitHub workflow.
+GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/stdout}"
 GITHUB_REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER:-TODO_TemplateAuthor}
 
+SCRIPTS_PATH="$(realpath "$( dirname "$0" )")"
 BUILD_PATH="$(realpath "$( dirname "$0" )/..")"
 #Note: This directory is supposed to be subdirectory within the repository. Do not point ResonitePath to the real Resonite files as they would be deleted in the next step!
 export ResonitePath="$BUILD_PATH/ResoniteAssemblies/"
@@ -32,3 +34,10 @@ dotnet test --no-restore --no-build || exit 7
 # package as zip file
 cd "$ResonitePath" || exit 8
 zip "$BUILD_NAME.zip" rml_mods/*.dll
+
+SAFE_VERSION_PATTERN='[0-9\.]+'
+
+RESONITE_VERSION="$(cat RESONITE_VERSION | grep -m 1 -Eo "$SAFE_VERSION_PATTERN" )" || exit $?
+MOD_VERSION="$(dotnet script $SCRIPTS_PATH/get-assembly-version.csx rml_mods/*.dll | grep -Eo "$SAFE_VERSION_PATTERN" )" || exit $?
+echo "resonite_version=$RESONITE_VERSION" >> "$GITHUB_OUTPUT" || exit $?
+echo "mod_version=$MOD_VERSION" >> "$GITHUB_OUTPUT" || exit $?
