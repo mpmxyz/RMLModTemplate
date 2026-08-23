@@ -62,7 +62,7 @@ then
 			HASHSUM="$( set -o pipefail ; curl --location --fail "$URL" | sha256sum | grep -m 1 -Eo '^\S+' )" || exit 6
 		else
 			HASHSUM="dummy"
-			echo "Injected dummy hashsums for testing purposes"
+			echo "::notice::Injected dummy hashsums for testing purposes"
 		fi
 		echo "->$HASHSUM"
 		HASHSUMS+=( "$HASHSUM" )
@@ -80,6 +80,6 @@ then
 	mkdir -p "$(dirname "$TARGET_FILE")" || exit 9
 	echo "$MERGED_MANIFEST" > "$TARGET_FILE" || exit 10
 else
-	echo "Tag $RELEASE_TAG does not match expected pattern $PATTERN!"
+	echo "::error::Tag $RELEASE_TAG does not match expected pattern $PATTERN!"
 	exit 11
 fi

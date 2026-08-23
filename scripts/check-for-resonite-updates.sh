@@ -9,13 +9,13 @@ echo "Checking for current Resonite version..."
 SAFE_VERSION_PATTERN='^[a-zA-Z0-9_\.\-]+$' #SECURITY: prevents interpretation when written into $GITHUB_OUTPUT
 if ! RESONITE_VERSION="$( curl -s "https://raw.githubusercontent.com/$GITHUB_REPOSITORY_OWNER/ResoniteAssemblies/refs/heads/main/Assemblies/RESONITE_VERSION" | head -n 1 | tr -d '\r\n ' )"
 then
-	echo "Make sure you own a fork of https://github.com/mpmxyz/ResoniteAssemblies!" >&2
-	echo "While it would be possible to depend on someone else's fork it can be maintained easily without being dependent on other people's actions." >&2
+	echo "::error::Make sure you own a fork of https://github.com/mpmxyz/ResoniteAssemblies!" >&2
+	echo "::notice::While it would be possible to depend on someone else's fork it can be maintained easily without being dependent on other people's actions." >&2
 	exit 1
 fi
 if [[ ! "$RESONITE_VERSION" =~ $SAFE_VERSION_PATTERN ]]
 then
-	echo "Invalid Resonite version '$RESONITE_VERSION'!" >&2
+	echo "::error::Invalid Resonite version '$RESONITE_VERSION'!" >&2
 	exit 2
 fi
 
@@ -32,7 +32,7 @@ then
 			echo "UP_TO_DATE=true" >> "$GITHUB_OUTPUT"
 			exit 0 #skip build-release but don't fail
 		else
-			echo "No release found, only failures..."
+			echo "::error::No release found, only failures..."
 			exit 99 #fails the workflow so no build is attempted (new pushes with bug fixes trigger build-release directly)
 		fi
 	else

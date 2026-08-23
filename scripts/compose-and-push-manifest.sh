@@ -8,7 +8,7 @@ MANIFEST_REPO_PATH="$(realpath -s ../resonite-mod-manifest)"
 
 if ! cd "$MANIFEST_REPO_PATH"
 then
-	echo "Expected an accessible fork of resonite-modding-group/resonite-mod-manifest at $MANIFEST_REPO_PATH!" >&2
+	echo "::error::Expected an accessible fork of resonite-modding-group/resonite-mod-manifest at $MANIFEST_REPO_PATH!" >&2
 	exit 100
 fi
 

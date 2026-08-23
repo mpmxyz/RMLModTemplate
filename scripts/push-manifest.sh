@@ -22,7 +22,7 @@ git config push.autoSetupRemote true
 git commit -m "Added entry for version $RELEASE_TAG"
 if [ "$DRY_RUN" == 'true' ]
 then
-    echo "Dry run: skipping push..."
+    echo "::notice::Dry run: skipping push..."
 else
     git push
 fi
