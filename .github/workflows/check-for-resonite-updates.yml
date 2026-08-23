@@ -21,12 +21,12 @@ jobs:
       FORCE_RELEASE: ${{ inputs.force-release }}
       REPOSITORY_NAME: ${{github.repository}}
     steps:
+
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
     - name: Query Resonite version and check if matching tag exists
       id: check-version
       run: |
-        wget "https://raw.githubusercontent.com/$REPOSITORY_NAME/refs/heads/main/scripts/check-for-resonite-updates.sh" || exit 90
-        chmod +x check-for-resonite-updates.sh || exit 95
-        ./check-for-resonite-updates.sh #either writes UP_TO_DATE=true or RESONITE_VERSION=x.y.z.b
+        scripts/check-for-resonite-updates.sh #either writes UP_TO_DATE=true or RESONITE_VERSION=x.y.z.b
   trigger-release:
     needs: check-for-resonite-update
     if: needs.check-for-resonite-update.outputs.UP_TO_DATE != 'true'
