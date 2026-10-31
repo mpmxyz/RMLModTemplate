@@ -16,8 +16,8 @@
 		<ResonitePath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/Resonite/')">$(HOME)/.steam/steam/steamapps/common/Resonite/</ResonitePath>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="ResoniteModLoader" Version="5.0.1" />
-		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
+		<PackageReference Include="ResoniteModLoader" Version="5.0.2" />
+		<PackageReference Include="Lib.Harmony" Version="2.4.3" />
 		<!-- Add new dependencies by creating entries that depend on the environment variable ResonitePath! -->
 		<Reference Include="BepuPhysics">
 			<HintPath>$(ResonitePath)BepuPhysics.dll</HintPath>
